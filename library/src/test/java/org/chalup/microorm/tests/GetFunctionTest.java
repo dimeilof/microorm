@@ -23,7 +23,6 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
 import org.chalup.microorm.MicroOrm;
-import org.chalup.microorm.annotations.Column;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

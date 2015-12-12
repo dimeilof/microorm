@@ -19,7 +19,6 @@ package org.chalup.microorm.tests;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.chalup.microorm.MicroOrm;
-import org.chalup.microorm.annotations.Column;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

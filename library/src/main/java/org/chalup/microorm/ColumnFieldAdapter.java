@@ -16,8 +16,6 @@
 
 package org.chalup.microorm;
 
-import org.chalup.microorm.annotations.Column;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 
@@ -25,23 +23,16 @@ import java.lang.reflect.Field;
 
 class ColumnFieldAdapter extends FieldAdapter {
 
-  private static final String[] EMPTY_ARRAY = new String[0];
-
   private final String mColumnName;
   private final String[] mColumnNames;
   private final TypeAdapter<?> mTypeAdapter;
-  private final boolean mTreatNullAsDefault;
-  private final boolean mReadonly;
 
   ColumnFieldAdapter(Field field, TypeAdapter<?> typeAdapter) {
     super(field);
     mTypeAdapter = typeAdapter;
 
-    Column columnAnnotation = field.getAnnotation(Column.class);
-    mColumnName = columnAnnotation.value();
+    mColumnName = field.getName();
     mColumnNames = new String[] { mColumnName };
-    mTreatNullAsDefault = columnAnnotation.treatNullAsDefault();
-    mReadonly = columnAnnotation.readonly();
   }
 
   @Override
@@ -52,10 +43,7 @@ class ColumnFieldAdapter extends FieldAdapter {
   @SuppressWarnings("unchecked")
   @Override
   protected void putValueToContentValues(Object fieldValue, ContentValues outValues) {
-    boolean skipColumn = mReadonly || (mTreatNullAsDefault && fieldValue == null);
-    if (!skipColumn) {
-      ((TypeAdapter<Object>) mTypeAdapter).toContentValues(outValues, mColumnName, fieldValue);
-    }
+    ((TypeAdapter<Object>) mTypeAdapter).toContentValues(outValues, mColumnName, fieldValue);
   }
 
   @Override
@@ -65,8 +53,6 @@ class ColumnFieldAdapter extends FieldAdapter {
 
   @Override
   public String[] getWritableColumnNames() {
-    return mReadonly
-        ? EMPTY_ARRAY
-        : getColumnNames();
+    return getColumnNames();
   }
 }

@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import org.chalup.microorm.annotations.Column;
+import org.chalup.microorm.annotations.DBIgnore;
 import org.chalup.microorm.annotations.Embedded;
 
 import android.content.ContentValues;
@@ -199,20 +199,10 @@ public class MicroOrm {
     ImmutableList.Builder<EmbeddedFieldInitializer> fieldInitializers = ImmutableList.builder();
 
     for (Field field : Fields.allFieldsIncludingPrivateAndSuper(klass)) {
+      if (field.isAnnotationPresent(DBIgnore.class)) continue;
       field.setAccessible(true);
 
-      Column columnAnnotation = field.getAnnotation(Column.class);
-      if (columnAnnotation != null) {
-        if (field.getType().isPrimitive() && columnAnnotation.treatNullAsDefault()) {
-          throw new IllegalArgumentException("Cannot set treatNullAsDefault on primitive members");
-        }
-        if (columnAnnotation.treatNullAsDefault() && columnAnnotation.readonly()) {
-          throw new IllegalArgumentException("It doesn't make sense to set treatNullAsDefault on readonly column");
-        }
-        ColumnFieldAdapter fieldAdapter = new ColumnFieldAdapter(field, mTypeAdapters.get(field.getType()));
-
-        fieldAdapters.add(fieldAdapter);
-      }
+      fieldAdapters.add(new ColumnFieldAdapter(field, mTypeAdapters.get(field.getType())));
 
       Embedded embeddedAnnotation = field.getAnnotation(Embedded.class);
       if (embeddedAnnotation != null) {
