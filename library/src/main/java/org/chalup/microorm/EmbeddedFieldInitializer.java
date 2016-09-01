@@ -19,16 +19,16 @@ package org.chalup.microorm;
 import java.lang.reflect.Field;
 
 class EmbeddedFieldInitializer {
-  private final Field mField;
-  private final DaoAdapter<Object> mDaoAdapter;
+    private final Field mField;
+    private final DaoAdapter<Object> mDaoAdapter;
 
-  @SuppressWarnings("unchecked")
-  public EmbeddedFieldInitializer(Field field, DaoAdapter<?> daoAdapter) {
-    mField = field;
-    mDaoAdapter = ((DaoAdapter<Object>) daoAdapter);
-  }
+    @SuppressWarnings("unchecked")
+    public EmbeddedFieldInitializer(Field field, DaoAdapter<?> daoAdapter) {
+        mField = field;
+        mDaoAdapter = ((DaoAdapter<Object>) daoAdapter);
+    }
 
-  public void initEmbeddedField(Object obj) throws IllegalAccessException {
-    mField.set(obj, mDaoAdapter.createInstance());
-  }
+    public void initEmbeddedField(Object obj) throws IllegalAccessException {
+        mField.set(obj, mDaoAdapter.createInstance());
+    }
 }

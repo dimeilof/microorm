@@ -23,15 +23,15 @@ import java.util.Collections;
 import java.util.List;
 
 final class Fields {
-  private Fields() {
-  }
-
-  static List<Field> allFieldsIncludingPrivateAndSuper(Class<?> klass) {
-    List<Field> fields = Lists.newArrayList();
-    while (!klass.equals(Object.class)) {
-      Collections.addAll(fields, klass.getDeclaredFields());
-      klass = klass.getSuperclass();
+    private Fields() {
     }
-    return fields;
-  }
+
+    static List<Field> allFieldsIncludingPrivateAndSuper(Class<?> klass) {
+        List<Field> fields = Lists.newArrayList();
+        while (!klass.equals(Object.class)) {
+            Collections.addAll(fields, klass.getDeclaredFields());
+            klass = klass.getSuperclass();
+        }
+        return fields;
+    }
 }

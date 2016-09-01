@@ -25,26 +25,26 @@ import android.database.Cursor;
  */
 public interface TypeAdapter<T> {
 
-  /**
-   * Reads a column from cursor and converts it to a Java object. Returns the
-   * converted object.
-   *
-   * @param c cursor containing the column
-   * @param columnName name of the column containing data representing the Java
-   * object
-   * @return the converted Java object. May be null.
-   */
-  public T fromCursor(Cursor c, String columnName);
+    /**
+     * Reads a column from cursor and converts it to a Java object. Returns the
+     * converted object.
+     *
+     * @param c          cursor containing the column
+     * @param columnName name of the column containing data representing the Java
+     *                   object
+     * @return the converted Java object. May be null.
+     */
+    public T fromCursor(Cursor c, String columnName);
 
-  /**
-   * Converts Java object into type that can be put into {@link ContentValues}
-   * and puts it into supplied {@code values} instance under {@code columnName}
-   * key.
-   *
-   * @param values {@link ContentValues} to be filled with data from
-   * {@code object}
-   * @param columnName name of the target column for converted {@code object}
-   * @param object an object to be converted
-   */
-  public void toContentValues(ContentValues values, String columnName, T object);
+    /**
+     * Converts Java object into type that can be put into {@link ContentValues}
+     * and puts it into supplied {@code values} instance under {@code columnName}
+     * key.
+     *
+     * @param values     {@link ContentValues} to be filled with data from
+     *                   {@code object}
+     * @param columnName name of the target column for converted {@code object}
+     * @param object     an object to be converted
+     */
+    public void toContentValues(ContentValues values, String columnName, T object);
 }

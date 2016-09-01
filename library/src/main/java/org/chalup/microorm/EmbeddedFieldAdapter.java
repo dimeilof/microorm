@@ -23,31 +23,31 @@ import java.lang.reflect.Field;
 
 class EmbeddedFieldAdapter extends FieldAdapter {
 
-  private final DaoAdapter<Object> mDaoAdapter;
+    private final DaoAdapter<Object> mDaoAdapter;
 
-  @SuppressWarnings("unchecked")
-  EmbeddedFieldAdapter(Field field, DaoAdapter<?> daoAdapter) {
-    super(field);
-    mDaoAdapter = ((DaoAdapter<Object>) daoAdapter);
-  }
+    @SuppressWarnings("unchecked")
+    EmbeddedFieldAdapter(Field field, DaoAdapter<?> daoAdapter) {
+        super(field);
+        mDaoAdapter = ((DaoAdapter<Object>) daoAdapter);
+    }
 
-  @Override
-  public void setValueFromCursor(Cursor inCursor, Object outTarget) throws IllegalArgumentException, IllegalAccessException {
-    mField.set(outTarget, mDaoAdapter.fromCursor(inCursor, mDaoAdapter.createInstance()));
-  }
+    @Override
+    public void setValueFromCursor(Cursor inCursor, Object outTarget) throws IllegalArgumentException, IllegalAccessException {
+        mField.set(outTarget, mDaoAdapter.fromCursor(inCursor, mDaoAdapter.createInstance()));
+    }
 
-  @Override
-  protected void putValueToContentValues(Object value, ContentValues outValues) {
-    mDaoAdapter.toContentValues(outValues, value);
-  }
+    @Override
+    protected void putValueToContentValues(Object value, ContentValues outValues) {
+        mDaoAdapter.toContentValues(outValues, value);
+    }
 
-  @Override
-  public String[] getColumnNames() {
-    return mDaoAdapter.getProjection();
-  }
+    @Override
+    public String[] getColumnNames() {
+        return mDaoAdapter.getProjection();
+    }
 
-  @Override
-  public String[] getWritableColumnNames() {
-    return mDaoAdapter.getWritableColumns();
-  }
+    @Override
+    public String[] getWritableColumnNames() {
+        return mDaoAdapter.getWritableColumns();
+    }
 }

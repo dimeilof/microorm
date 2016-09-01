@@ -23,36 +23,66 @@ import java.lang.reflect.Field;
 
 class ColumnFieldAdapter extends FieldAdapter {
 
-  private final String mColumnName;
-  private final String[] mColumnNames;
-  private final TypeAdapter<?> mTypeAdapter;
+    private final String mColumnName;
+    private final String[] mColumnNames;
+    private final TypeAdapter<?> mTypeAdapter;
 
-  ColumnFieldAdapter(Field field, TypeAdapter<?> typeAdapter) {
-    super(field);
-    mTypeAdapter = typeAdapter;
+    ColumnFieldAdapter(Field field, TypeAdapter<?> typeAdapter) {
+        super(field);
+        mTypeAdapter = typeAdapter;
 
-    mColumnName = field.getName();
-    mColumnNames = new String[] { mColumnName };
-  }
+        mColumnName = toSQLNameDefault(field.getName());
+        mColumnNames = new String[]{mColumnName};
+    }
 
-  @Override
-  public void setValueFromCursor(Cursor inCursor, Object outTarget) throws IllegalArgumentException, IllegalAccessException {
-    mField.set(outTarget, mTypeAdapter.fromCursor(inCursor, mColumnName));
-  }
+    @Override
+    public void setValueFromCursor(Cursor inCursor, Object outTarget) throws IllegalArgumentException, IllegalAccessException {
+        mField.set(outTarget, mTypeAdapter.fromCursor(inCursor, mColumnName));
+    }
 
-  @SuppressWarnings("unchecked")
-  @Override
-  protected void putValueToContentValues(Object fieldValue, ContentValues outValues) {
-    ((TypeAdapter<Object>) mTypeAdapter).toContentValues(outValues, mColumnName, fieldValue);
-  }
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void putValueToContentValues(Object fieldValue, ContentValues outValues) {
+        ((TypeAdapter<Object>) mTypeAdapter).toContentValues(outValues, mColumnName, fieldValue);
+    }
 
-  @Override
-  public String[] getColumnNames() {
-    return mColumnNames;
-  }
+    @Override
+    public String[] getColumnNames() {
+        return mColumnNames;
+    }
 
-  @Override
-  public String[] getWritableColumnNames() {
-    return getColumnNames();
-  }
+    @Override
+    public String[] getWritableColumnNames() {
+        return getColumnNames();
+    }
+    
+    public static String toSQLNameDefault(String camelCased) {
+        StringBuilder sb = new StringBuilder();
+        char[] buf = camelCased.toCharArray();
+
+        for (int i = 0; i < buf.length; i++) {
+            char prevChar = (i > 0) ? buf[i - 1] : 0;
+            char c = buf[i];
+            char nextChar = (i < buf.length - 1) ? buf[i + 1] : 0;
+            boolean isFirstChar = (i == 0);
+
+            if (isFirstChar || Character.isLowerCase(c) || Character.isDigit(c)) {
+                sb.append(Character.toUpperCase(c));
+            } else if (Character.isUpperCase(c)) {
+                if (Character.isLetterOrDigit(prevChar)) {
+                    if (Character.isLowerCase(prevChar)) {
+                        sb.append('_').append(c);
+                    } else if (nextChar > 0 && Character.isLowerCase(nextChar)) {
+                        sb.append('_').append(c);
+                    } else {
+                        sb.append(c);
+                    }
+                } else {
+                    sb.append(c);
+                }
+            }
+        }
+
+        return sb.toString();
+    }
 }

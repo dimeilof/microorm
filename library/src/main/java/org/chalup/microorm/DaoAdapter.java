@@ -20,15 +20,15 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 interface DaoAdapter<T> {
-  T createInstance();
+    T createInstance();
 
-  T fromCursor(Cursor c, T object);
+    T fromCursor(Cursor c, T object);
 
-  ContentValues toContentValues(ContentValues values, T object);
+    ContentValues toContentValues(ContentValues values, T object);
 
-  ContentValues createContentValues();
+    ContentValues createContentValues();
 
-  String[] getProjection();
+    String[] getProjection();
 
-  String[] getWritableColumns();
+    String[] getWritableColumns();
 }
