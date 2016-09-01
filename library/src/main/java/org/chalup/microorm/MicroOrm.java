@@ -16,6 +16,9 @@
 
 package org.chalup.microorm;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -25,9 +28,6 @@ import com.google.common.collect.Maps;
 
 import org.chalup.microorm.annotations.DBIgnore;
 import org.chalup.microorm.annotations.Embedded;
-
-import android.content.ContentValues;
-import android.database.Cursor;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -294,6 +294,8 @@ public class MicroOrm {
     typeAdapters.put(Double.class, new OptionalTypeAdapter<>(new TypeAdapters.DoubleAdapter()));
 
     typeAdapters.put(String.class, new OptionalTypeAdapter<>(new TypeAdapters.StringAdapter()));
+
+    typeAdapters.put(byte[].class, new TypeAdapters.ByteArrayAdapter());
 
     TYPE_ADAPTERS = ImmutableMap.copyOf(typeAdapters);
   }

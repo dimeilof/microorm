@@ -106,4 +106,17 @@ final class TypeAdapters {
       values.put(columnName, object);
     }
   }
+
+  public static class ByteArrayAdapter implements TypeAdapter<byte[]> {
+
+      @Override
+      public byte[] fromCursor(Cursor c, String columnName) {
+          return c.getBlob(c.getColumnIndexOrThrow(columnName));
+      }
+
+      @Override
+      public void toContentValues(ContentValues values, String columnName, byte[] object) {
+          values.put(columnName, object);
+      }
+  }
 }
