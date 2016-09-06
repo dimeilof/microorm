@@ -19,17 +19,14 @@ package org.chalup.microorm;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.google.common.base.Function;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
 import org.chalup.microorm.annotations.DBIgnore;
 import org.chalup.microorm.annotations.Embedded;
+import org.chalup.microorm.guava.Function;
+import org.chalup.microorm.guava.Preconditions;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -98,7 +95,7 @@ public class MicroOrm {
      * {@link Cursor}
      */
     public <T> List<T> listFromCursor(Cursor c, Class<T> klass) {
-        List<T> result = Lists.newArrayList();
+        List<T> result = new ArrayList<>();
 
         if (c != null && c.moveToFirst()) {
             DaoAdapter<T> adapter = getAdapter(klass);
@@ -195,8 +192,8 @@ public class MicroOrm {
     }
 
     private <T> DaoAdapter<T> buildDaoAdapter(Class<T> klass) {
-        ImmutableList.Builder<FieldAdapter> fieldAdapters = ImmutableList.builder();
-        ImmutableList.Builder<EmbeddedFieldInitializer> fieldInitializers = ImmutableList.builder();
+        List<FieldAdapter> fieldAdapters = new ArrayList<>();
+        List<EmbeddedFieldInitializer> fieldInitializers = new ArrayList<>();
 
         for (Field field : Fields.allFieldsIncludingPrivateAndSuper(klass)) {
             if (field.isAnnotationPresent(DBIgnore.class)) continue;
@@ -214,7 +211,7 @@ public class MicroOrm {
             }
         }
 
-        return new ReflectiveDaoAdapter<>(klass, fieldAdapters.build(), fieldInitializers.build());
+        return new ReflectiveDaoAdapter<>(klass, fieldAdapters, fieldInitializers);
     }
 
     /**
@@ -225,7 +222,7 @@ public class MicroOrm {
         this(TYPE_ADAPTERS);
     }
 
-    private MicroOrm(ImmutableMap<Class<?>, TypeAdapter<?>> typeAdapters) {
+    private MicroOrm(Map<Class<?>, TypeAdapter<?>> typeAdapters) {
         mTypeAdapters = typeAdapters;
     }
 
@@ -241,7 +238,7 @@ public class MicroOrm {
         private final Map<Class<?>, TypeAdapter<?>> mTypeAdapters;
 
         public Builder() {
-            mTypeAdapters = Maps.newHashMap(TYPE_ADAPTERS);
+            mTypeAdapters = new HashMap<>(TYPE_ADAPTERS);
         }
 
         /**
@@ -269,15 +266,15 @@ public class MicroOrm {
          * registered with this this builder
          */
         public MicroOrm build() {
-            return new MicroOrm(ImmutableMap.copyOf(mTypeAdapters));
+            return new MicroOrm(new HashMap<>(mTypeAdapters));
         }
     }
 
-    private static final ImmutableMap<Class<?>, TypeAdapter<?>> TYPE_ADAPTERS;
+    private static final Map<Class<?>, TypeAdapter<?>> TYPE_ADAPTERS;
 
     static {
 
-        Map<Class<?>, TypeAdapter<?>> typeAdapters = Maps.newHashMap();
+        Map<Class<?>, TypeAdapter<?>> typeAdapters = new HashMap<>();
 
         typeAdapters.put(short.class, new TypeAdapters.ShortAdapter());
         typeAdapters.put(int.class, new TypeAdapters.IntegerAdapter());
@@ -297,9 +294,9 @@ public class MicroOrm {
 
         typeAdapters.put(byte[].class, new TypeAdapters.ByteArrayAdapter());
 
-        TYPE_ADAPTERS = ImmutableMap.copyOf(typeAdapters);
+        TYPE_ADAPTERS = new HashMap<>(typeAdapters);
     }
 
-    private final ImmutableMap<Class<?>, TypeAdapter<?>> mTypeAdapters;
-    private final Map<Class<?>, DaoAdapter<?>> mDaoAdapterCache = Maps.newHashMap();
+    private final Map<Class<?>, TypeAdapter<?>> mTypeAdapters;
+    private final Map<Class<?>, DaoAdapter<?>> mDaoAdapterCache = new HashMap<>();
 }

@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion 22
-  buildToolsVersion "22.0.1"
+  compileSdkVersion 24
+  buildToolsVersion '24.0.2'
 
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_7
@@ -19,18 +19,16 @@ android {
 }
 
 dependencies {
-  compile 'com.google.guava:guava:18.0'
-
   testCompile('junit:junit:4.11') {
     exclude module: 'hamcrest-core'
   }
   testCompile 'org.robolectric:robolectric:2.4'
   testCompile 'com.google.truth:truth:0.25'
   testCompile 'com.squareup:fest-android:1.0.7'
-  testCompile 'com.android.support:support-v4:22.2.1'
+  testCompile 'com.android.support:support-v4:24.2.0'
   testCompile 'org.mockito:mockito-all:1.9.5'
 
-  compile 'com.android.support:support-annotations:22.2.1'
+  compile 'com.android.support:support-v4:24.2.0'
 }
 
 apply from: './gradle-mvn-push.gradle'
