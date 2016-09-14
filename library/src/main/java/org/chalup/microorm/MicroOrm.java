@@ -25,6 +25,7 @@ import org.chalup.microorm.guava.Function;
 import org.chalup.microorm.guava.Preconditions;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -196,7 +197,7 @@ public class MicroOrm {
         List<EmbeddedFieldInitializer> fieldInitializers = new ArrayList<>();
 
         for (Field field : Fields.allFieldsIncludingPrivateAndSuper(klass)) {
-            if (field.isAnnotationPresent(DBIgnore.class)) continue;
+            if (field.isAnnotationPresent(DBIgnore.class) || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) continue;
             field.setAccessible(true);
 
             fieldAdapters.add(new ColumnFieldAdapter(field, mTypeAdapters.get(field.getType())));
